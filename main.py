@@ -80,13 +80,13 @@ def escucha():
             if nombre in text:
                 txt = text.replace(nombre, '')
                 txt = txt.replace("oye", '')
-                speech.talk(txt)
+                speech.talk(text)
             time.sleep(1)
 
     except:
         pass
 
-    return txt
+    return text
 
 def run_dante():
     dante = escucha()
