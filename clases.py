@@ -1,8 +1,7 @@
 from curses import keyname
 import pyttsx3
 import speech_recognition as sr
-import platform
-from datetime import datetime
+
 
 # Voz del asistente
 class SpeechModule:
