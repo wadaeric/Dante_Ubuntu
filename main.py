@@ -1,7 +1,8 @@
 import time
-import pywhatkit
-from clases import SpeechModule, VoiceRecognitionModule
+from classes import SpeechModule, VoiceRecognitionModule
 from datetime import datetime
+import pywhatkit
+
 
 
 dia = datetime.now().strftime('%d')
@@ -51,6 +52,7 @@ if mes_nombre == "December":
     mes_nombre = "Diciembre"
 
 
+
 # Cargamos los modulos                
 speech = SpeechModule()
 recognition = VoiceRecognitionModule()
@@ -64,52 +66,59 @@ def dar_hora():
 
 def habla(text):
     speech.talk(text)
-
+    
+#txt = ""
 def escucha():
-
+    #global txt
+    txt = ""
     try:
-
         # Mientras reconozca el texto
         while True:
+            
             text = recognition.recognize()
-
-            #Repetira lo que entienda
+            # Repetira lo que se le haya dicho
             text = text.lower()
-
-            # si el nombre esta dentro de este texto
             if nombre in text:
                 txt = text.replace(nombre, '')
                 txt = txt.replace("oye", '')
-                speech.talk(text)
+                #speech.talk(txt)
+                break
             time.sleep(1)
-
+            return txt
+           
     except:
         pass
-
-    return text
+    
 
 def run_dante():
-    dante = escucha()
-
-    # Hora
-    if 'hora es' in dante:
-        print("Son las "+dar_hora())
-        habla("Son las "+dar_hora())
-    
-    # Youtube    
-    if 'reproduce' in dante:
-        music = dante.replace('reproduce', '')
-        music = music.replace(nombre, '')
-        txt = music.replace("oye", '')
+    while True:
         
-        print("reproduciendo "+txt)
-        habla("reproduciendo "+txt)
-        pywhatkit.playonyt(txt)
-
-    # Fecha
-    if 'es hoy' in dante:
-        print("Hoy es "+dia_nombre+", "+dia+" de "+mes_nombre+" del "+año)
-        habla("Hoy es "+dia_nombre+", "+dia+" de "+mes_nombre+" del "+año)
+        dante = escucha()
+        
+        # Hora
+        if "hora es" in dante:
+            print("Son las "+dar_hora())
+            habla("Son las "+dar_hora())
+            
+        # Youtube    
+        if "reproduce" in dante:
+            music = dante.replace('reproduce', '')
+            music = music.replace(nombre, '')
+            txt = music.replace("oye", '')
+        
+            print("reproduciendo "+txt)
+            habla("reproduciendo "+txt)
+            pywhatkit.playonyt(txt)
+        # Fecha
+        if "es hoy" in dante:
+            print("Hoy es "+dia_nombre+", "+dia+" de "+mes_nombre+" del "+año)
+            habla("Hoy es "+dia_nombre+", "+dia+" de "+mes_nombre+" del "+año)
+        
+        # Desconectar a Dante    
+        elif 'salir' in dante:
+            print("Desconectando Dante")
+            habla("Desconectando Dante Asistente.")
+            break
         
 if __name__ == '__main__':
     run_dante()
