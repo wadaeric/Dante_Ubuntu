@@ -1,7 +1,5 @@
 import pyttsx3
 import speech_recognition as sr
-import platform
-from datetime import datetime
 
 
 # Voz del asistente
@@ -11,7 +9,7 @@ class SpeechModule:
         self.engine = pyttsx3.init('espeak')
         
         # Establecemos la velocidad del habla en 125
-        self.engine.setProperty('rate', 125)
+        self.engine.setProperty('rate', 175)
         # El volumen va de 0.0 a 1.0 es bool
         self.engine.setProperty('volume', 1)
         
@@ -35,9 +33,11 @@ class VoiceRecognitionModule:
         with sr.Microphone() as source:
             print("Escuchando...")
             audio = self.r.listen(source)
-            #try:
-            text = self.r.recognize_google(audio, key=self.key, language="ES-es")
-            str(text)
-            return text
-            #except:
-            #    return None
+            try:
+                text = self.r.recognize_google(audio, key=self.key, language="ES-es")
+                
+                text = text.lower()
+                
+                return text
+            except:
+                return None

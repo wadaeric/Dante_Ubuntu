@@ -1,7 +1,8 @@
-import time
+import random
+import pywhatkit
 from classes import SpeechModule, VoiceRecognitionModule
 from datetime import datetime
-import pywhatkit
+from bromas import chistes
 
 
 
@@ -67,27 +68,45 @@ def dar_hora():
 def habla(text):
     speech.talk(text)
     
-#txt = ""
+def cuenta_un_chiste():
+    aleatorio = random.randint(1,5)
+    print("chiste numero: ", aleatorio)
+    habla(chistes.CHISTES[aleatorio])
+    
+def normaliza(string):
+        # Normaliza el texto quitando acentos
+        acentos = {'á': 'a', 'é': 'e', 'í': 'i', 'ó': 'o', 'ú': 'u'}
+        for acen in acentos:
+            if acen in string:
+                string = string.replace(acen, acentos[acen])
+        return string
+    
+    
+text = ""
+
 def escucha():
-    #global txt
-    txt = ""
+    #global text
+    #text = ""
     try:
         # Mientras reconozca el texto
         while True:
-            
+            global text
             text = recognition.recognize()
-            # Repetira lo que se le haya dicho
-            text = text.lower()
+                        
+            # Quitamos acentos
+            text = normaliza(text)
+            # Revisamos el texto
+            print(text)
+                       
+            
             if nombre in text:
-                txt = text.replace(nombre, '')
-                txt = txt.replace("oye", '')
+                text = text.replace(nombre, '')
+                text = text.replace("oye", '')
                 #speech.talk(txt)
                 break
-            time.sleep(1)
-            return txt
-           
     except:
         pass
+    return text
     
 
 def run_dante():
@@ -113,6 +132,14 @@ def run_dante():
         if "es hoy" in dante:
             print("Hoy es "+dia_nombre+", "+dia+" de "+mes_nombre+" del "+año)
             habla("Hoy es "+dia_nombre+", "+dia+" de "+mes_nombre+" del "+año)
+            
+        elif 'como estas' in dante:
+            bien = "Muy bien, muchas gracias por preguntar mi amo"
+            print("Muy bien, muchas gracias por preguntar mi amo")
+            habla(bien)
+            
+        elif 'cuentame un chiste' in dante:
+            cuenta_un_chiste()
         
         # Desconectar a Dante    
         elif 'salir' in dante:
