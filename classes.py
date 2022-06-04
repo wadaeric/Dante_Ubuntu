@@ -1,12 +1,21 @@
 import pyttsx3
 import speech_recognition as sr
+import platform
 
+so = platform.system()
+
+if so == "Windows":
+    controlador = "sapi5"
+elif so == "Linux":
+    controlador = "espeak"
+else:
+    controlador = "nsss"
 
 # Voz del asistente
 class SpeechModule:
     def __init__(self):
-        # Controlador para el sistema operativo Windows: sapi5
-        self.engine = pyttsx3.init('espeak')
+        # Controlador para el sistema operativo
+        self.engine = pyttsx3.init(controlador)
         
         # Establecemos la velocidad del habla en 125
         self.engine.setProperty('rate', 175)
@@ -15,7 +24,7 @@ class SpeechModule:
         
         voices = self.engine.getProperty('voices')
         # Asignamos la voz numero 0
-        self.engine.setProperty('voice', voices[0].id)
+        self.engine.setProperty('voice', voices[1].id)
         
     def talk(self, text):
         self.engine.say(text)
@@ -28,16 +37,21 @@ class VoiceRecognitionModule:
         # En caso de ser software comercial se tiene que pagar una key
         self.key = key
         self.r = sr.Recognizer()
-        
+    
+    
+    
     def recognize(self):
         with sr.Microphone() as source:
             print("Escuchando...")
             audio = self.r.listen(source)
             try:
-                text = self.r.recognize_google(audio, key=self.key, language="ES-es")
+                text = self. r.recognize_google(audio, key=self.key, language="ES-es")
                 
-                text = text.lower()
+                text = text.lower()                
                 
                 return text
             except:
                 return None
+            
+    
+    
