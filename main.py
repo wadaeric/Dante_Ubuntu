@@ -5,7 +5,6 @@ from datetime import datetime
 from bromas import chistes
 
 
-
 dia = datetime.now().strftime('%d')
 dia_nombre = datetime.now().strftime('%A')
 mes = datetime.now().strftime('%m')
@@ -53,13 +52,11 @@ if mes_nombre == "December":
     mes_nombre = "Diciembre"
 
 
-
 # Cargamos los modulos                
 speech = SpeechModule()
 recognition = VoiceRecognitionModule()
 
 nombre = "dante"
-
 
 def dar_hora():
     hora = datetime.now().strftime('%H:%M')
@@ -69,7 +66,7 @@ def habla(text):
     speech.talk(text)
     
 def cuenta_un_chiste():
-    aleatorio = random.randint(1,5)
+    aleatorio = random.randint(1,11)
     print("chiste numero: ", aleatorio)
     habla(chistes.CHISTES[aleatorio])
     
@@ -81,46 +78,41 @@ def normaliza(string):
                 string = string.replace(acen, acentos[acen])
         return string
     
-    
-text = ""
 
+txt = ""
 def escucha():
-    #global text
-    #text = ""
+    global txt
+    txt = ""
     try:
         # Mientras reconozca el texto
         while True:
-            global text
             text = recognition.recognize()
-                        
+            
             # Quitamos acentos
             text = normaliza(text)
             # Revisamos el texto
             print(text)
-                       
             
             if nombre in text:
-                text = text.replace(nombre, '')
-                text = text.replace("oye", '')
-                #speech.talk(txt)
+                txt = text.replace(nombre, '')
+                txt = txt.replace("oye", '')
                 break
+            
     except:
         pass
-    return text
-    
+    return txt
 
 def run_dante():
     while True:
-        
         dante = escucha()
-        
+    
         # Hora
-        if "hora es" in dante:
+        if 'hora es' in dante:
             print("Son las "+dar_hora())
             habla("Son las "+dar_hora())
             
         # Youtube    
-        if "reproduce" in dante:
+        elif 'reproduce' in dante:
             music = dante.replace('reproduce', '')
             music = music.replace(nombre, '')
             txt = music.replace("oye", '')
@@ -129,7 +121,7 @@ def run_dante():
             habla("reproduciendo "+txt)
             pywhatkit.playonyt(txt)
         # Fecha
-        if "es hoy" in dante:
+        elif 'es hoy' in dante:
             print("Hoy es "+dia_nombre+", "+dia+" de "+mes_nombre+" del "+año)
             habla("Hoy es "+dia_nombre+", "+dia+" de "+mes_nombre+" del "+año)
             
@@ -140,7 +132,7 @@ def run_dante():
             
         elif 'cuentame un chiste' in dante:
             cuenta_un_chiste()
-        
+
         # Desconectar a Dante    
         elif 'salir' in dante:
             print("Desconectando Dante")
